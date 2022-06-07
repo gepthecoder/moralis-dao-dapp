@@ -6,7 +6,7 @@ interface IdaoContract {
     function balanceOf(address, uint256) external view returns (uint256);
 }
 
-contract CyberDao {
+contract Dao {
 
     address public owner;
     uint256 nextProposal;
