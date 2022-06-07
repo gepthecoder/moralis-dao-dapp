@@ -6,6 +6,30 @@ import { Link } from "react-router-dom"; // to route back to home page
 
 const Proposal = () => {
 
+  const [votes, setVotes] = useState([
+    [
+      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
+      <Icon fill="#268c41" size={24} svg="checkmark" />,
+    ],
+    [
+      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
+      <Icon fill="#268c41" size={24} svg="checkmark" />,
+    ],
+    [
+      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
+      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
+    ],
+    [
+      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
+      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
+    ],
+    [
+      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
+      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
+    ],
+  ]);
+
+
   return (
     <>
       <div className="contentProposal">
@@ -52,6 +76,15 @@ const Proposal = () => {
               </div>
             </div>
           </Widget>
+        </div>
+        <div className="votesDiv">
+          <Table
+            style={{ width: "60%" }}
+            columnsConfig="90% 10%"
+            data={votes}
+            header={[<span>Address</span>, <span>Vote</span>]}
+            pageSize={5}
+          />
         </div>
       </div>
     </>
