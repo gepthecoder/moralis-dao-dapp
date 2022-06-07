@@ -13,9 +13,7 @@ const Home = () => {
 
   const { Moralis, isInitialized } = useMoralis();
 
-  const [proposals, setProposals] = useState([
-    
-  ]);
+  const [proposals, setProposals] = useState([]);
 
   async function getStatus(proposalId) {
     const ProposalCounts = Moralis.Object.extend("ProposalCounts");
@@ -32,6 +30,40 @@ const Home = () => {
       return { color: "blue", text: "Ongoing" };
     }
   }
+
+  useEffect(() => {
+    if (isInitialized) {
+
+      async function getProposals() {
+        const Proposals = Moralis.Object.extend("Proposals");
+        const query = new Moralis.Query(Proposals);
+        query.descending("uid_decimal");
+        const results = await query.find();
+        const table = await Promise.all(
+          results.map(async (e) => [
+            e.attributes.uid,
+            e.attributes.description,
+            <Link to="/proposal" state={{
+              description: e.attributes.description,
+              color: (await getStatus(e.attributes.uid)).color,
+              text: (await getStatus(e.attributes.uid)).text,
+              id: e.attributes.uid,
+              proposer: e.attributes.proposer
+              
+              }}>
+              <Tag
+                color={(await getStatus(e.attributes.uid)).color}
+                text={(await getStatus(e.attributes.uid)).text}
+              />
+            </Link>,
+          ])
+        );
+        setProposals(table);
+        setTotalP(results.length);
+      }
+      console.log(getProposals())
+    }
+  }, [isInitialized]);
 
   return (
     <>
