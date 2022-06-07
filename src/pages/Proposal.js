@@ -18,6 +18,9 @@ const Proposal = () => {
   const [percDown, setPercDown] = useState(0);
   const [votes, setVotes] = useState([]);
 
+  const [sub, setSub] = useState(false);
+  const contractProcessor = useWeb3ExecuteFunction();
+
   useEffect(() => {
     if (isInitialized) {
       
@@ -68,6 +71,53 @@ const Proposal = () => {
 
     }
   }, [isInitialized]);
+  
+
+  async function castVote(upDown) {
+    
+    let options = {
+      contractAddress: "0x9E6C17d19bc082c85E9c50E3693879Ff9a72d612",
+      functionName: "voteOnProposal",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "_vote",
+              type: "bool",
+            },
+          ],
+          name: "voteOnProposal",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      params: {
+        _id: proposalDetails.id,
+        _vote: upDown,
+      },
+    };
+
+
+    await contractProcessor.fetch({
+      params: options,
+      onSuccess: () => {
+        console.log("Vote Cast Succesfully");
+        setSub(false);
+      },
+      onError: (error) => {
+        alert(error.data.message);
+        setSub(false);
+      },
+    });
+
+  }
 
   return (
     <>
@@ -129,13 +179,15 @@ const Proposal = () => {
           />
 
           <Form
+            isDisabled={proposalDetails.text !== "Ongoing"}
+
             style={{
               width: "35%",
               height: "250px",
               border: "1px solid rgba(6, 158, 252, 0.2)",
             }}
             buttonConfig={{
-              isLoading: false,
+              isLoading: sub,
               loadingText: "Casting Vote",
               text: "Vote",
               theme: "secondary",
@@ -152,7 +204,12 @@ const Proposal = () => {
               },
             ]}
             onSubmit={(e) => {
-              alert("Vote cast!!")
+              if (e.data[0].inputResult[0] === "For") {
+                castVote(true);
+              } else {
+                castVote(false);
+              }
+              setSub(true);
             }}
             title="Cast Vote"
           />
