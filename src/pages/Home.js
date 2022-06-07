@@ -13,7 +13,7 @@ const Home = () => {
 
   const { Moralis, isInitialized } = useMoralis();
 
-  const [proposals, setProposals] = useState([]);
+  const [proposals, setProposals] = useState();
 
   async function getStatus(proposalId) {
     const ProposalCounts = Moralis.Object.extend("ProposalCounts");
@@ -61,7 +61,26 @@ const Home = () => {
         setProposals(table);
         setTotalP(results.length);
       }
-      console.log(getProposals())
+
+      async function getPassRate() {
+        const ProposalCounts = Moralis.Object.extend("ProposalCounts");
+        const query = new Moralis.Query(ProposalCounts);
+        const results = await query.find();
+        let votesUp = 0;
+
+        results.forEach((e) => {
+          if (e.attributes.passed) {
+            votesUp++;
+          }
+        });
+
+        setCounted(results.length);
+        setPassRate((votesUp / results.length) * 100);
+      }
+
+      getProposals();
+      getPassRate();
+      
     }
   }, [isInitialized]);
 
@@ -70,11 +89,12 @@ const Home = () => {
       <div className="content">
         <TabList defaultActiveKey={1} tabStyle="bulbUnion">
           <Tab tabKey={1} tabName="DAO">
+            {proposals && (
               <div className="tabContent">
                 Governance Overview
                 <div className="widgets">
                   <Widget
-                    info={52}
+                    info={totalP}
                     title="Proposals Created"
                     style={{ width: "200%" }}
                   >
@@ -83,13 +103,13 @@ const Home = () => {
                       <div className="progress">
                         <div
                           className="progressPercentage"
-                          style={{ width: `${60}%` }}
+                          style={{ width: `${passRate}%` }}
                         ></div>
                       </div>
                     </div>
                   </Widget>
                   <Widget info={420} title="Eligible Voters" />
-                  <Widget info={5} title="Ongoing Proposals" />
+                  <Widget info={totalP-counted} title="Ongoing Proposals" />
                 </div>
                 Recent Proposals
                 <div style={{ marginTop: "30px" }}>
@@ -128,6 +148,7 @@ const Home = () => {
                   title="Create a New Proposal"
                 />
               </div>
+            )}
           </Tab>
           <Tab tabKey={2} tabName="Forum"></Tab>
           <Tab tabKey={3} tabName="Docs"></Tab>
