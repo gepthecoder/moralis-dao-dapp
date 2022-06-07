@@ -4,7 +4,10 @@ import "./pages.css";
 import { Tag, Widget, Blockie, Tooltip, Icon, Form, Table } from "web3uikit";
 import { Link } from "react-router-dom"; // to route back to home page
 
+import { useLocation } from "react-router";
+
 const Proposal = () => {
+  const { state: proposalDetails } = useLocation();
 
   const [votes, setVotes] = useState([
     [
@@ -41,14 +44,14 @@ const Proposal = () => {
             </div>
           </Link>
 
-          <div>g3p for web3 moralis king pin of the month?</div>
+          <div>{proposalDetails.description}</div>
 
           <div className="proposalOverview">
-            <Tag color={"red"} text={"Rejected"} />
+            <Tag color={proposalDetails.color} text={proposalDetails.text} />
             <div className="proposer">
               <span>Proposed By </span>
-              <Tooltip content={"0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E"}>
-                <Blockie seed={"0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E"} />
+              <Tooltip content={proposalDetails.proposer}>
+                <Blockie seed={proposalDetails.proposer} />
               </Tooltip>
             </div>
           </div>
