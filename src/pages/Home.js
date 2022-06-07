@@ -18,6 +18,54 @@ const Home = () => {
 
   const Web3Api = useMoralisWeb3Api();
 
+  const contractProcessor = useWeb3ExecuteFunction();
+  const [sub, setSub] = useState(); // bool if we are submiting our proposal
+
+  async function createProposal(newProposal) {
+    let options = {
+      contractAddress: "0x9E6C17d19bc082c85E9c50E3693879Ff9a72d612",
+      functionName: "createProposal",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_description",
+              type: "string",
+            },
+            {
+              internalType: "address[]",
+              name: "_canVote",
+              type: "address[]",
+            },
+          ],
+          name: "createProposal",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      params: {
+        _description: newProposal,
+        _canVote: voters,
+      },
+    };
+
+
+    await contractProcessor.fetch({
+      params: options,
+      onSuccess: () => {
+        console.log("Proposal Succesful");
+        setSub(false);
+      },
+      onError: (error) => {
+        alert(error.data.message);
+        setSub(false);
+      },
+    });
+  }
+
+
   async function getStatus(proposalId) {
     const ProposalCounts = Moralis.Object.extend("ProposalCounts");
     const query = new Moralis.Query(ProposalCounts);
@@ -159,7 +207,8 @@ const Home = () => {
                     },
                   ]}
                   onSubmit={(e) => {
-                    alert("Proposal Submited: " + e.data[0].inputResult)
+                    setSub(true);
+                    createProposal(e.data[0].inputResult);
                   }}
                   title="Create a New Proposal"
                 />
