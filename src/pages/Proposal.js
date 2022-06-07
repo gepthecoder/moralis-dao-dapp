@@ -6,32 +6,68 @@ import { Link } from "react-router-dom"; // to route back to home page
 
 import { useLocation } from "react-router";
 
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+
 const Proposal = () => {
   const { state: proposalDetails } = useLocation();
 
-  const [votes, setVotes] = useState([
-    [
-      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
-      <Icon fill="#268c41" size={24} svg="checkmark" />,
-    ],
-    [
-      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
-      <Icon fill="#268c41" size={24} svg="checkmark" />,
-    ],
-    [
-      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
-      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
-    ],
-    [
-      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
-      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
-    ],
-    [
-      "0xe276941FBd5f936E677dB9B6eEE8212a3b268C5E",
-      <Icon fill="#d93d3d" size={24} svg="arrowCircleDown" />,
-    ],
-  ]);
+  const { Moralis, isInitialized } = useMoralis();
 
+  const [latestVote, setLatestVote] = useState();
+  const [percUp, setPercUp] = useState(0);
+  const [percDown, setPercDown] = useState(0);
+  const [votes, setVotes] = useState([]);
+
+  useEffect(() => {
+    if (isInitialized) {
+      
+      async function getVotes() {
+        
+        const Votes = Moralis.Object.extend("Votes");
+
+        const query = new Moralis.Query(Votes);
+        query.equalTo("proposal", proposalDetails.id);
+        query.descending("createdAt");
+
+        const results = await query.find();
+
+        if (results.length > 0) {
+          setLatestVote(results[0].attributes);
+          setPercDown(
+            (
+              (Number(results[0].attributes.votesDown) /
+                (Number(results[0].attributes.votesDown) +
+                  Number(results[0].attributes.votesUp))) *
+              100
+            ).toFixed(0)
+          );
+          setPercUp(
+            (
+              (Number(results[0].attributes.votesUp) /
+                (Number(results[0].attributes.votesDown) +
+                  Number(results[0].attributes.votesUp))) *
+              100
+            ).toFixed(0)
+          );
+        }
+
+        // store icon
+        const votesDirection = results.map((e) => [
+          e.attributes.voter,
+          <Icon
+            fill={e.attributes.votedFor ? "#2cc40a" : "#d93d3d"}
+            size={24}
+            svg={e.attributes.votedFor ? "checkmark" : "arrowCircleDown"}
+          />,
+        ]);
+
+        setVotes(votesDirection);
+
+      }
+      getVotes();
+
+    }
+  }, [isInitialized]);
 
   return (
     <>
@@ -56,30 +92,33 @@ const Proposal = () => {
             </div>
           </div>
         </div>
-        <div className="widgets">
-          <Widget info={30} title="Votes For">
-            <div className="extraWidgetInfo">
-              <div className="extraTitle">{77}%</div>
-              <div className="progress">
-                <div
-                  className="progressPercentage"
-                  style={{ width: `${77}%` }}
-                ></div>
+        {latestVote && (
+          <div className="widgets">
+            <Widget info={latestVote.votesUp} title="Votes For">
+              <div className="extraWidgetInfo">
+                <div className="extraTitle">{percUp}%</div>
+                <div className="progress">
+                  <div
+                    className="progressPercentage"
+                    style={{ width: `${percUp}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          </Widget>
-          <Widget info={10} title="Votes Against">
-            <div className="extraWidgetInfo">
-              <div className="extraTitle">{23}%</div>
-              <div className="progress">
-                <div
-                  className="progressPercentage"
-                  style={{ width: `${23}%` }}
-                ></div>
+            </Widget>
+            <Widget info={latestVote.votesDown} title="Votes Against">
+              <div className="extraWidgetInfo">
+                <div className="extraTitle">{percDown}%</div>
+                <div className="progress">
+                  <div
+                    className="progressPercentage"
+                    style={{ width: `${percDown}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          </Widget>
-        </div>
+            </Widget>
+          </div>
+        )}
+        
         <div className="votesDiv">
           <Table
             style={{ width: "60%" }}
