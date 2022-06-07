@@ -76,6 +76,29 @@ const Home = () => {
                     pageSize={5}
                   />
                 </div>
+                <Form
+                  buttonConfig={{
+                    isLoading: false,
+                    loadingText: "Submitting Proposal",
+                    text: "Submit",
+                    theme: "secondary",
+                  }}
+                  data={[
+                    {
+                      inputWidth: "100%",
+                      name: "New Proposal",
+                      type: "textarea",
+                      validation: {
+                        required: true,
+                      },
+                      value: "",
+                    },
+                  ]}
+                  onSubmit={(e) => {
+                    alert("Proposal Submited: " + e.data[0].inputResult)
+                  }}
+                  title="Create a New Proposal"
+                />
               </div>
           </Tab>
           <Tab tabKey={2} tabName="Forum"></Tab>
