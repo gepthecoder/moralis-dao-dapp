@@ -85,6 +85,35 @@ const Proposal = () => {
             header={[<span>Address</span>, <span>Vote</span>]}
             pageSize={5}
           />
+
+          <Form
+            style={{
+              width: "35%",
+              height: "250px",
+              border: "1px solid rgba(6, 158, 252, 0.2)",
+            }}
+            buttonConfig={{
+              isLoading: false,
+              loadingText: "Casting Vote",
+              text: "Vote",
+              theme: "secondary",
+            }}
+            data={[
+              {
+                inputWidth: "100%",
+                name: "Cast Vote",
+                options: ["For", "Against"],
+                type: "radios",
+                validation: {
+                  required: true,
+                },
+              },
+            ]}
+            onSubmit={(e) => {
+              alert("Vote cast!!")
+            }}
+            title="Cast Vote"
+          />
         </div>
       </div>
     </>
