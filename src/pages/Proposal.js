@@ -16,7 +16,7 @@ const Proposal = () => {
               Overview
             </div>
           </Link>
-          
+
           <div>g3p for web3 moralis king pin of the month?</div>
 
           <div className="proposalOverview">
@@ -28,6 +28,30 @@ const Proposal = () => {
               </Tooltip>
             </div>
           </div>
+        </div>
+        <div className="widgets">
+          <Widget info={30} title="Votes For">
+            <div className="extraWidgetInfo">
+              <div className="extraTitle">{77}%</div>
+              <div className="progress">
+                <div
+                  className="progressPercentage"
+                  style={{ width: `${77}%` }}
+                ></div>
+              </div>
+            </div>
+          </Widget>
+          <Widget info={10} title="Votes Against">
+            <div className="extraWidgetInfo">
+              <div className="extraTitle">{23}%</div>
+              <div className="progress">
+                <div
+                  className="progressPercentage"
+                  style={{ width: `${23}%` }}
+                ></div>
+              </div>
+            </div>
+          </Widget>
         </div>
       </div>
     </>
