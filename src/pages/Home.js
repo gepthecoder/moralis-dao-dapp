@@ -10,10 +10,13 @@ const Home = () => {
   const [passRate, setPassRate] = useState(0);
   const [totalP, setTotalP] = useState(0);
   const [counted, setCounted] = useState(0);
+  const [voters, setVoters] = useState(0);
 
   const { Moralis, isInitialized } = useMoralis();
 
   const [proposals, setProposals] = useState();
+
+  const Web3Api = useMoralisWeb3Api();
 
   async function getStatus(proposalId) {
     const ProposalCounts = Moralis.Object.extend("ProposalCounts");
@@ -78,6 +81,19 @@ const Home = () => {
         setPassRate((votesUp / results.length) * 100);
       }
 
+      const fetchTokenIdOwners = async () => {
+        const options = {
+          address: "0x2953399124F0cBB46d2CbACD8A89cF0599974963",
+          token_id:
+            "102432214047623065579877441936962877221106994973455125140481204099781660508161",
+          chain: "mumbai",
+        };
+        const tokenIdOwners = await Web3Api.token.getTokenIdOwners(options);
+        const addresses = tokenIdOwners.result.map((e) => e.owner_of);
+        setVoters(addresses);
+      };
+
+      fetchTokenIdOwners();
       getProposals();
       getPassRate();
       
@@ -108,7 +124,7 @@ const Home = () => {
                       </div>
                     </div>
                   </Widget>
-                  <Widget info={420} title="Eligible Voters" />
+                  <Widget info={voters.length} title="Eligible Voters" />
                   <Widget info={totalP-counted} title="Ongoing Proposals" />
                 </div>
                 Recent Proposals
