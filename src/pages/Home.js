@@ -105,6 +105,7 @@ const Home = () => {
           <Tab tabKey={3} tabName="Docs"></Tab>
         </TabList>
       </div>
+      <div className="voting"></div>
     </>
   );
 };
