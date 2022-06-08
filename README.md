@@ -33,3 +33,6 @@ By pressing the status of a proposal we navigate to proposal page itself and we 
 ![image](https://user-images.githubusercontent.com/38008294/172585823-9054f850-a4df-48f9-a548-5b13a8cb7792.png)
 #
 ![image](https://user-images.githubusercontent.com/38008294/172586060-883aef32-36c5-4410-82f4-1be2e82d31a3.png)
+
+
+# deployed contract: 0x9E6C17d19bc082c85E9c50E3693879Ff9a72d612
