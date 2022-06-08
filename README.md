@@ -7,7 +7,8 @@ Working DAO dApp where we can see all of the proposals, stats for the proposal a
 #
 By pressing the status of a proposal we navigate to proposal page itself and we can see the status of a single vote, what people have been voting for this proposal and a chance to vote on it itself.
 #
-
+⚜⚜ https://cyber-jawz-club-dao.netlify.app/ ⚜⚜
+#
 ![image](https://user-images.githubusercontent.com/38008294/172585427-a59b2a43-f73c-49ba-acc5-d2af4eb42571.png)
 #
 ![image](https://user-images.githubusercontent.com/38008294/172586526-f3822f3c-7de0-439d-8c88-dfcb0361dbb4.png)
