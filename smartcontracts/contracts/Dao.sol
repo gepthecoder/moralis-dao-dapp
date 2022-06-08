@@ -10,7 +10,7 @@ contract Dao {
 
     address public owner;
     uint256 nextProposal;
-    // which tokens are allowed on dao
+    // which tokens/nfts are "tickets" to participate on dao
     uint256[] public validTokens;
 
     IdaoContract daoContract;

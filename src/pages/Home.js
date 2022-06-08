@@ -17,8 +17,8 @@ const Home = () => {
   const [proposals, setProposals] = useState();
 
   const Web3Api = useMoralisWeb3Api();
-
   const contractProcessor = useWeb3ExecuteFunction();
+
   const [sub, setSub] = useState(); // bool if we are submiting our proposal
 
   async function createProposal(newProposal) {
@@ -131,14 +131,15 @@ const Home = () => {
 
       const fetchTokenIdOwners = async () => {
         const options = {
-          address: "0x2953399124F0cBB46d2CbACD8A89cF0599974963",
+          address: "0x8726a7a9b44e7CB891A23C09331a52e34Fb6a054",
           token_id:
-            "102432214047623065579877441936962877221106994973455125140481204099781660508161",
+            "0",
           chain: "mumbai",
         };
         const tokenIdOwners = await Web3Api.token.getTokenIdOwners(options);
         const addresses = tokenIdOwners.result.map((e) => e.owner_of);
         setVoters(addresses);
+        console.log(addresses)
       };
 
       fetchTokenIdOwners();
@@ -190,7 +191,7 @@ const Home = () => {
                 </div>
                 <Form
                   buttonConfig={{
-                    isLoading: false,
+                    isLoading: sub,
                     loadingText: "Submitting Proposal",
                     text: "Submit",
                     theme: "secondary",
